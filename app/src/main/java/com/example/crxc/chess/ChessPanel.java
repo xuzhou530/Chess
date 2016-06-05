@@ -60,6 +60,8 @@ public class ChessPanel extends View {
     private ChessPoint cp12;
     private ChessPoint cp13;
     private ChessPoint cp14;
+    private ChessPoint cp15;
+    private ChessPoint cp16;
     private ChessPoint cpb1;
     private ChessPoint cpb2;
     private ChessPoint cpb3;
@@ -74,6 +76,8 @@ public class ChessPanel extends View {
     private ChessPoint cpb12;
     private ChessPoint cpb13;
     private ChessPoint cpb14;
+    private ChessPoint cpb15;
+    private ChessPoint cpb16;
     private ArrayList<PanelPoint> vaildPoint;
     private ArrayList<PanelPoint> mJggPoint;
     private ArrayList<PanelPoint> mHongPoint=new ArrayList<PanelPoint>();
@@ -216,6 +220,8 @@ public class ChessPanel extends View {
         mRedArray.add(cp12);
         mRedArray.add(cp13);
         mRedArray.add(cp14);
+        mRedArray.add(cp15);
+        mRedArray.add(cp16);
         mBlackArray.add(cpb1);
         mBlackArray.add(cpb2);
         mBlackArray.add(cpb3);
@@ -230,6 +236,8 @@ public class ChessPanel extends View {
         mBlackArray.add(cpb12);
         mBlackArray.add(cpb13);
         mBlackArray.add(cpb14);
+        mBlackArray.add(cpb15);
+        mBlackArray.add(cpb16);
     }
 
     private void cshChessPoint() {
@@ -247,6 +255,9 @@ public class ChessPanel extends View {
         cp12 = new ChessPoint(mRedPoint.get(11), mBingPiece);
         cp13 = new ChessPoint(mRedPoint.get(12), mBingPiece);
         cp14 = new ChessPoint(mRedPoint.get(13), mBingPiece);
+        cp15 = new ChessPoint(mRedPoint.get(14), mPaoPiece);
+        cp16 = new ChessPoint(mRedPoint.get(15), mPaoPiece);
+
 
         cpb1 = new ChessPoint(mBlackPoint.get(0), mCheBPiece);
         cpb2 = new ChessPoint(mBlackPoint.get(1), mMaBPiece);
@@ -262,6 +273,8 @@ public class ChessPanel extends View {
         cpb12 = new ChessPoint(mBlackPoint.get(11), mZuPiece);
         cpb13 = new ChessPoint(mBlackPoint.get(12), mZuPiece);
         cpb14 = new ChessPoint(mBlackPoint.get(13), mZuPiece);
+        cpb15 = new ChessPoint(mBlackPoint.get(14), mPaoBPiece);
+        cpb16 = new ChessPoint(mBlackPoint.get(15), mPaoBPiece);
     }
 
     private void cshPoint() {
@@ -273,6 +286,10 @@ public class ChessPanel extends View {
             mRedPoint.add(new PanelPoint(2 * i, 3, mLineHight));
             mBlackPoint.add(new PanelPoint(2 * i, 6, mLineHight));
         }
+        mRedPoint.add(new PanelPoint(1,2,mLineHight));
+        mRedPoint.add(new PanelPoint(7,2,mLineHight));
+        mBlackPoint.add(new PanelPoint(1,7,mLineHight));
+        mBlackPoint.add(new PanelPoint(7,7,mLineHight));
     }
 
     private void cshPiece(int pieceWidth) {
@@ -455,6 +472,11 @@ public class ChessPanel extends View {
                     Log.d(TAG, "onTouchEvent: 点击了兵");
                     vaildPoint = BingRule.getVaildPoint(p, mLineHight,mHongPoint);
                     Log.d(TAG, "onTouchEvent: 取得兵的有效位置");
+                }else if (bmp == mPaoPiece) {
+                    //闪烁效果
+                    Log.d(TAG, "onTouchEvent: 点击了炮");
+                    vaildPoint = PaoRule.getVaildPoint(p, mLineHight,mRedPoint,mBlackPoint);
+                    Log.d(TAG, "onTouchEvent: 取得炮的有效位置");
                 }
 
             }
@@ -509,6 +531,11 @@ public class ChessPanel extends View {
                         Log.d(TAG, "onTouchEvent: 点击了卒");
                         vaildPoint = ZuRule.getVaildPoint(p, mLineHight,mHongPoint);
                         Log.d(TAG, "onTouchEvent: 取得卒的有效位置");
+                    }else if (bmp == mPaoBPiece) {
+                        //闪烁效果
+                        Log.d(TAG, "onTouchEvent: 点击了黑炮");
+                        vaildPoint = PaoRule.getVaildPoint(p, mLineHight,mRedPoint,mBlackPoint);
+                        Log.d(TAG, "onTouchEvent: 取得黑炮的有效位置");
                     }
 
                 }
