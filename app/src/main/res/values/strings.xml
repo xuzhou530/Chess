@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Chess</string>
+    <string name="OneMoreGame">再来一局?</string>
+    <string name="OneMoreGameYes">再来一局</string>
+    <string name="RedWin">红方胜</string>
+    <string name="QuitGame">退出游戏</string>
+    <string name="BlackWin">黑方胜</string>
 </resources>

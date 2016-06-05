@@ -18,7 +18,7 @@ public class PanelPoint extends Point {
     private int y;
 
     public PanelPoint(int x, int y, float mLineHight) {
-        super((int) ((x + 0.125) * mLineHight), (int) ((9.125 - y) * mLineHight));
+        super((int) ((x ) * mLineHight), (int) ((9 - y) * mLineHight));
         this.x=x;
         this.y=y;
     }

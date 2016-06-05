@@ -1,10 +1,13 @@
 package com.example.crxc.chess;
 
 import android.animation.ObjectAnimator;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
@@ -40,12 +43,12 @@ public class ChessPanel extends View {
     private Bitmap mCheBPiece;
     private Bitmap mMaPiece;
     private Bitmap mMaBPiece;
-    private float Bili = 0.75f;
+    private float Bili = 1f;
     private boolean mIsRed = true;
-    private ArrayList<ChessPoint> mRedArray = new ArrayList<ChessPoint>();
-    private ArrayList<ChessPoint> mBlackArray = new ArrayList<ChessPoint>();
-    private ArrayList<PanelPoint> mRedPoint = new ArrayList<PanelPoint>();
-    private ArrayList<PanelPoint> mBlackPoint = new ArrayList<PanelPoint>();
+    private ArrayList<ChessPoint> mRedArray ;
+    private ArrayList<ChessPoint> mBlackArray ;
+    private ArrayList<PanelPoint> mRedPoint ;
+    private ArrayList<PanelPoint> mBlackPoint ;
     private ChessPoint cp1;
     private ChessPoint cp2;
     private ChessPoint cp3;
@@ -80,28 +83,27 @@ public class ChessPanel extends View {
     private ChessPoint cpb16;
     private ArrayList<PanelPoint> vaildPoint;
     private ArrayList<PanelPoint> mJggPoint;
-    private ArrayList<PanelPoint> mHongPoint=new ArrayList<PanelPoint>();
-    private ArrayList<PanelPoint> mHeiPoint=new ArrayList<PanelPoint>();
+    private ArrayList<PanelPoint> mHongPoint = new ArrayList<PanelPoint>();
+    private ArrayList<PanelPoint> mHeiPoint = new ArrayList<PanelPoint>();
     private boolean mDianjiguo = false;
     private Bitmap bmp = null;
     private static final String TAG = "ChessPanel";
     private PanelPoint mSelectPiece;
     private ChessPoint chessPoint;
     private ChessPoint chessPoint1;
+    private String text;
 
     public ChessPanel(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setBackgroundColor(0x44ff0000);
         init();
     }
 
 
     private void init() {
         mPaint = new Paint();
-        mPaint.setColor(0x88000000);
+        mPaint.setColor(Color.BLACK);
+        mPaint.setStrokeWidth(5f);
         cshPieceBmp();
-
-
     }
 
     private void cshJgg() {
@@ -206,6 +208,8 @@ public class ChessPanel extends View {
     }
 
     private void cshArray() {
+        mRedArray=new ArrayList<ChessPoint>();
+        mBlackArray=new ArrayList<ChessPoint>();
         mRedArray.add(cp1);
         mRedArray.add(cp2);
         mRedArray.add(cp3);
@@ -250,7 +254,7 @@ public class ChessPanel extends View {
         cp8 = new ChessPoint(mRedPoint.get(7), mMaPiece);
         cp7 = new ChessPoint(mRedPoint.get(6), mXiangPiece);
         cp6 = new ChessPoint(mRedPoint.get(5), mShiPiece);
-        cp10 = new ChessPoint(mRedPoint.get(9),mBingPiece);
+        cp10 = new ChessPoint(mRedPoint.get(9), mBingPiece);
         cp11 = new ChessPoint(mRedPoint.get(10), mBingPiece);
         cp12 = new ChessPoint(mRedPoint.get(11), mBingPiece);
         cp13 = new ChessPoint(mRedPoint.get(12), mBingPiece);
@@ -278,6 +282,8 @@ public class ChessPanel extends View {
     }
 
     private void cshPoint() {
+        mRedPoint=new ArrayList<PanelPoint>();
+        mBlackPoint=new ArrayList<PanelPoint>();
         for (int i = 0; i < 9; i++) {
             mRedPoint.add(new PanelPoint(i, 0, mLineHight));
             mBlackPoint.add(new PanelPoint(i, 9, mLineHight));
@@ -286,10 +292,10 @@ public class ChessPanel extends View {
             mRedPoint.add(new PanelPoint(2 * i, 3, mLineHight));
             mBlackPoint.add(new PanelPoint(2 * i, 6, mLineHight));
         }
-        mRedPoint.add(new PanelPoint(1,2,mLineHight));
-        mRedPoint.add(new PanelPoint(7,2,mLineHight));
-        mBlackPoint.add(new PanelPoint(1,7,mLineHight));
-        mBlackPoint.add(new PanelPoint(7,7,mLineHight));
+        mRedPoint.add(new PanelPoint(1, 2, mLineHight));
+        mRedPoint.add(new PanelPoint(7, 2, mLineHight));
+        mBlackPoint.add(new PanelPoint(1, 7, mLineHight));
+        mBlackPoint.add(new PanelPoint(7, 7, mLineHight));
     }
 
     private void cshPiece(int pieceWidth) {
@@ -335,7 +341,7 @@ public class ChessPanel extends View {
         if (action == MotionEvent.ACTION_DOWN) {
             int x = (int) event.getX();
             int y = (int) event.getY();
-             PanelPoint p = getVaildPoint(x, y);
+            PanelPoint p = getVaildPoint(x, y);
             if (mDianjiguo == false) {
                 Log.d(TAG, "onTouchEvent:第一次点击 ");
                 getLuoZiPoint(p);
@@ -343,81 +349,91 @@ public class ChessPanel extends View {
                 Log.d(TAG, "onTouchEvent: 第二次点击");
 
 //                    if (vaildPoint.contains(p)) {
-                        if (mIsRed == true) {
-                            //加入新棋子
-                            if (!mRedPoint.contains(p)) {
-                                Log.d(TAG, "onTouchEvent: 1");
-                                if (vaildPoint.contains(p)) {
-                                    Log.d(TAG, "onTouchEvent: 2");
+                if (mIsRed == true) {
+                    //加入新棋子
+                    if (!mRedPoint.contains(p)) {
+                        Log.d(TAG, "onTouchEvent: 1");
+                        if (vaildPoint.contains(p)) {
+                            Log.d(TAG, "onTouchEvent: 2");
 
-                                    mIsRed = false;
-                                    mDianjiguo = !mDianjiguo;
-                                    //                        吃子
-                                    if (mBlackPoint.contains(p)) {
-                                        mBlackPoint.remove(p);
-                                        for (ChessPoint cp : mBlackArray) {
-                                           if(cp.getmPoint().equals(p)){
-                                            chessPoint1 = cp;
-                                           }
-                                        }
-                                        mBlackArray.remove(chessPoint1);
-                                        Log.d(TAG, "onTouchEvent:红方吃子 ");
+                            mIsRed = false;
+                            mDianjiguo = !mDianjiguo;
+                            //                        吃子
+                            if (mBlackPoint.contains(p)) {
+                                mBlackPoint.remove(p);
+                                for (ChessPoint cp : mBlackArray) {
+                                    if (cp.getmPoint().equals(p)) {
+                                        chessPoint1 = cp;
                                     }
-                                    mRedPoint.add(p);
-                                    mRedArray.add(new ChessPoint(p, bmp));
-                                    Log.d(TAG, "onTouchEvent: 红方加入新棋子");
-                                    mRedPoint.remove(mSelectPiece);
-                                    mRedArray.remove(chessPoint);
-                                    Log.d(TAG, "onTouchEvent: 从红方棋子队列移除点击棋子");
-                                    invalidate();
-                                    Log.d(TAG, "onTouchEvent: 红方落子");
                                 }
-                            }else {
-                                mDianjiguo=false;
-                                getLuoZiPoint(p);
-                                Log.d(TAG, "onTouchEvent: 取消选择棋子");
-                            }
-                        } else {
-
-    //                        黑棋逻辑
-                            if (!mBlackPoint.contains(p)) {
-                                if (vaildPoint.contains(p)) {
-                                    mIsRed = !mIsRed;
-
-                                    mDianjiguo = !mDianjiguo;
-                                    //                        吃子
-                                    if (mRedPoint.contains(p)) {
-                                        mRedPoint.remove(p);
-                                        for (ChessPoint cp : mRedArray) {
-                                            if(cp.getmPoint().equals(p)){
-                                            chessPoint1 = cp;
-                                            }
-                                        }
-                                        mRedArray.remove(chessPoint1);
-                                        Log.d(TAG, "onTouchEvent:黑方吃子 ");
-                                    }
-
-                                    Log.d(TAG, "onTouchEvent:黑方落子 ");
-                                    mBlackPoint.add(p);
-                                    mBlackArray.add(new ChessPoint(p, bmp));
-                                    Log.d(TAG, "onTouchEvent: 黑方加入新棋子");
-                                    mBlackPoint.remove(mSelectPiece);
-                                    mBlackArray.remove(chessPoint);
-                                    Log.d(TAG, "onTouchEvent: 从黑方棋子队列移除点击棋子");
-                                    invalidate();
+                                if (chessPoint1.getmBitmap() == mJiangPiece) {
+                                    text=getResources().getString(R.string.RedWin);
+                                    ShowDialog();
+                                    mBlackArray.remove(chessPoint1);
+                                } else {
+                                    mBlackArray.remove(chessPoint1);
                                 }
-                            }else {
-                                mDianjiguo=false;
-                                getLuoZiPoint(p);
-                                Log.d(TAG, "onTouchEvent: 取消选择棋子");
+                                Log.d(TAG, "onTouchEvent:红方吃子 ");
                             }
-
-
+                            mRedPoint.add(p);
+                            mRedArray.add(new ChessPoint(p, bmp));
+                            Log.d(TAG, "onTouchEvent: 红方加入新棋子");
+                            mRedPoint.remove(mSelectPiece);
+                            mRedArray.remove(chessPoint);
+                            Log.d(TAG, "onTouchEvent: 从红方棋子队列移除点击棋子");
+                            invalidate();
+                            Log.d(TAG, "onTouchEvent: 红方落子");
                         }
-//                    }
+                    } else {
+                        mDianjiguo = false;
+                        getLuoZiPoint(p);
+                        Log.d(TAG, "onTouchEvent: 取消选择棋子");
+                    }
+                } else {
+
+                    //                        黑棋逻辑
+                    if (!mBlackPoint.contains(p)) {
+                        if (vaildPoint.contains(p)) {
+                            mIsRed = !mIsRed;
+
+                            mDianjiguo = !mDianjiguo;
+                            //                        吃子
+                            if (mRedPoint.contains(p)) {
+                                mRedPoint.remove(p);
+                                for (ChessPoint cp : mRedArray) {
+                                    if (cp.getmPoint().equals(p)) {
+                                        chessPoint1 = cp;
+                                    }
+                                }
+                                if (chessPoint1.getmBitmap()==mShuaiPiece) {
+                                    text=getResources().getString(R.string.BlackWin);
+                                    ShowDialog();
+                                    mRedArray.remove(chessPoint1);
+                                } else {
+                                    mRedArray.remove(chessPoint1);
+                                }
+                                Log.d(TAG, "onTouchEvent:黑方吃子 ");
+                            }
+
+                            Log.d(TAG, "onTouchEvent:黑方落子 ");
+                            mBlackPoint.add(p);
+                            mBlackArray.add(new ChessPoint(p, bmp));
+                            Log.d(TAG, "onTouchEvent: 黑方加入新棋子");
+                            mBlackPoint.remove(mSelectPiece);
+                            mBlackArray.remove(chessPoint);
+                            Log.d(TAG, "onTouchEvent: 从黑方棋子队列移除点击棋子");
+                            invalidate();
+                        }
+                    } else {
+                        mDianjiguo = false;
+                        getLuoZiPoint(p);
+                        Log.d(TAG, "onTouchEvent: 取消选择棋子");
+                    }
+
+
                 }
-
-
+//                    }
+            }
 
 
             return true;
@@ -427,12 +443,33 @@ public class ChessPanel extends View {
 
     }
 
+    private void ShowDialog() {
+        AlertDialog.Builder builder=new AlertDialog.Builder(getContext());
+        builder.setTitle(text);
+        builder.setMessage(getResources().getString(R.string.OneMoreGame));
+        builder.setPositiveButton(getResources().getString(R.string.OneMoreGameYes), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mDianjiguo=false;
+                mIsRed=true;
+                cshPoint();
+                Log.d(TAG, "onClick: 初始化点");
+                cshChessPoint();
+                Log.d(TAG, "onClick: 初始化棋子位置");
+                cshArray();
+                Log.d(TAG, "onClick: 初始化队列");
+                invalidate();
+            }
+        });
+        builder.create().show();
+    }
+
     private void getLuoZiPoint(PanelPoint p) {
         if (mIsRed) {
             Log.d(TAG, "onTouchEvent: 红方选择棋子");
             if (mRedPoint.contains(p)) {
                 Log.d(TAG, "onTouchEvent: 红方有效选择");
-                mSelectPiece=p;
+                mSelectPiece = p;
 
                 for (ChessPoint cp : mRedArray) {
                     if (cp.getmPoint().equals(p)) {
@@ -452,30 +489,30 @@ public class ChessPanel extends View {
                     Log.d(TAG, "onTouchEvent: 点击了红士");
                     vaildPoint = ShiRule.getVaildPoint(p, mLineHight, mJggPoint);
                     Log.d(TAG, "onTouchEvent: 取得士的有效位置");
-                }else if (bmp == mXiangPiece) {
+                } else if (bmp == mXiangPiece) {
                     //闪烁效果
                     Log.d(TAG, "onTouchEvent: 点击了红象");
-                    vaildPoint = XiangRule.getVaildPoint(p, mLineHight, mHongPoint,mRedPoint,mBlackPoint);
+                    vaildPoint = XiangRule.getVaildPoint(p, mLineHight, mHongPoint, mRedPoint, mBlackPoint);
                     Log.d(TAG, "onTouchEvent: 取得象的有效位置");
-                }else if (bmp == mMaPiece) {
+                } else if (bmp == mMaPiece) {
                     //闪烁效果
                     Log.d(TAG, "onTouchEvent: 点击了红马");
-                    vaildPoint = MaRule.getVaildPoint(p, mLineHight, mRedPoint,mBlackPoint);
+                    vaildPoint = MaRule.getVaildPoint(p, mLineHight, mRedPoint, mBlackPoint);
                     Log.d(TAG, "onTouchEvent: 取得马的有效位置");
-                }else if (bmp == mChePiece) {
+                } else if (bmp == mChePiece) {
                     //闪烁效果
                     Log.d(TAG, "onTouchEvent: 点击了红车");
-                    vaildPoint = CheRule.getVaildPoint(p, mLineHight, mRedPoint,mBlackPoint);
+                    vaildPoint = CheRule.getVaildPoint(p, mLineHight, mRedPoint, mBlackPoint);
                     Log.d(TAG, "onTouchEvent: 取得车的有效位置");
-                }else if (bmp == mBingPiece) {
+                } else if (bmp == mBingPiece) {
                     //闪烁效果
                     Log.d(TAG, "onTouchEvent: 点击了兵");
-                    vaildPoint = BingRule.getVaildPoint(p, mLineHight,mHongPoint);
+                    vaildPoint = BingRule.getVaildPoint(p, mLineHight, mHongPoint);
                     Log.d(TAG, "onTouchEvent: 取得兵的有效位置");
-                }else if (bmp == mPaoPiece) {
+                } else if (bmp == mPaoPiece) {
                     //闪烁效果
                     Log.d(TAG, "onTouchEvent: 点击了炮");
-                    vaildPoint = PaoRule.getVaildPoint(p, mLineHight,mRedPoint,mBlackPoint);
+                    vaildPoint = PaoRule.getVaildPoint(p, mLineHight, mRedPoint, mBlackPoint);
                     Log.d(TAG, "onTouchEvent: 取得炮的有效位置");
                 }
 
@@ -487,7 +524,7 @@ public class ChessPanel extends View {
             Log.d(TAG, "onTouchEvent: 黑方选择棋子");
             if (mBlackPoint.contains(p)) {
                 Log.d(TAG, "onTouchEvent: 黑方有效选择");
-                mSelectPiece=p;
+                mSelectPiece = p;
 
                 for (ChessPoint cp : mBlackArray) {
                     if (cp.getmPoint().equals(p)) {
@@ -511,30 +548,30 @@ public class ChessPanel extends View {
                         //                        设置图片闪烁
                         vaildPoint = ShiBRule.getVaildPoint(p, mLineHight, mJggPoint);
                         Log.d(TAG, "onTouchEvent: 取得黑士的有效位置");
-                    }else if (bmp == mXiangBPiece) {
+                    } else if (bmp == mXiangBPiece) {
                         //闪烁效果
                         Log.d(TAG, "onTouchEvent: 点击了黑象");
-                        vaildPoint = XiangRule.getVaildPoint(p, mLineHight, mHeiPoint,mRedPoint,mBlackPoint);
+                        vaildPoint = XiangRule.getVaildPoint(p, mLineHight, mHeiPoint, mRedPoint, mBlackPoint);
                         Log.d(TAG, "onTouchEvent: 取得黑象的有效位置");
-                    }else if (bmp == mMaBPiece) {
+                    } else if (bmp == mMaBPiece) {
                         //闪烁效果
                         Log.d(TAG, "onTouchEvent: 点击了黑马");
-                        vaildPoint = MaRule.getVaildPoint(p, mLineHight, mRedPoint,mBlackPoint);
+                        vaildPoint = MaRule.getVaildPoint(p, mLineHight, mRedPoint, mBlackPoint);
                         Log.d(TAG, "onTouchEvent: 取得黑马的有效位置");
-                    }else if (bmp == mCheBPiece) {
+                    } else if (bmp == mCheBPiece) {
                         //闪烁效果
                         Log.d(TAG, "onTouchEvent: 点击了黑车");
-                        vaildPoint = CheRule.getVaildPoint(p, mLineHight, mRedPoint,mBlackPoint);
+                        vaildPoint = CheRule.getVaildPoint(p, mLineHight, mRedPoint, mBlackPoint);
                         Log.d(TAG, "onTouchEvent: 取得黑车的有效位置");
-                    }else if (bmp == mZuPiece) {
+                    } else if (bmp == mZuPiece) {
                         //闪烁效果
                         Log.d(TAG, "onTouchEvent: 点击了卒");
-                        vaildPoint = ZuRule.getVaildPoint(p, mLineHight,mHongPoint);
+                        vaildPoint = ZuRule.getVaildPoint(p, mLineHight, mHongPoint);
                         Log.d(TAG, "onTouchEvent: 取得卒的有效位置");
-                    }else if (bmp == mPaoBPiece) {
+                    } else if (bmp == mPaoBPiece) {
                         //闪烁效果
                         Log.d(TAG, "onTouchEvent: 点击了黑炮");
-                        vaildPoint = PaoRule.getVaildPoint(p, mLineHight,mRedPoint,mBlackPoint);
+                        vaildPoint = PaoRule.getVaildPoint(p, mLineHight, mRedPoint, mBlackPoint);
                         Log.d(TAG, "onTouchEvent: 取得黑炮的有效位置");
                     }
 
