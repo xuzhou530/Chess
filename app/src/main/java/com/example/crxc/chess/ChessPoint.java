@@ -20,6 +20,7 @@ public class ChessPoint  {
 
     private final Bitmap mBitmap;
 
+
     public ChessPoint(Point p, Bitmap b) {
         mPoint=p;
         mBitmap=b;
