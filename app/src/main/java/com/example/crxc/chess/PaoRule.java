@@ -86,28 +86,36 @@ public class PaoRule {
 
         for (int x = p.getX() + Xmin; x <= p.getX() + Xmax; x++) {
             PanelPoint point=new PanelPoint(x, p.getY(), mLineHight);
-            if (!mBlackPoint.contains(point)&&!mRedPoint.contains(point)) {
+            if ((!mBlackPoint.contains(point))&&(!mRedPoint.contains(point))) {
                 plist.add(new PanelPoint(x, p.getY(), mLineHight));
             }
         }
         for (int y = p.getY() + min; y <= p.getY() + max; y++) {
             PanelPoint point=new PanelPoint(p.getX(), y, mLineHight);
-            if (!mBlackPoint.contains(point)&&!mRedPoint.contains(point)) {
+            if ((!mBlackPoint.contains(point))&&(!mRedPoint.contains(point))) {
                 plist.add(new PanelPoint(p.getX(), y, mLineHight));
             }
         }
         PanelPoint p1=getMinPanel(p,mRedPoint,mBlackPoint);
         PanelPoint p2=getMinPanel(p1,mRedPoint,mBlackPoint);
-        plist.add(p2);
+        if (p1.getY()!=0) {
+            plist.add(p2);
+        }
         PanelPoint p3=getMaxPanel(p,mRedPoint,mBlackPoint);
         PanelPoint p4=getMaxPanel(p3,mRedPoint,mBlackPoint);
-        plist.add(p4);
+        if (p3.getY()!=9) {
+            plist.add(p4);
+        }
         PanelPoint p5=getXMinPanel(p,mRedPoint,mBlackPoint);
         PanelPoint p6=getXMinPanel(p5,mRedPoint,mBlackPoint);
-        plist.add(p6);
+        if (p5.getX()!=0) {
+            plist.add(p6);
+        }
         PanelPoint p7=getXMaxPanel(p,mRedPoint,mBlackPoint);
         PanelPoint p8=getXMaxPanel(p7,mRedPoint,mBlackPoint);
-        plist.add(p8);
+        if (p7.getX()!=8) {
+            plist.add(p8);
+        }
 
         for (PanelPoint point : plist) {
             vaildPoint.add(point);
