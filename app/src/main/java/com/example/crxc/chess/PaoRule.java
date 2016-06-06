@@ -84,11 +84,17 @@ public class PaoRule {
             }
         }
 
-        for (int x = p.getX()+1 + Xmin; x < p.getX() + Xmax; x++) {
-            plist.add(new PanelPoint(x, p.getY(), mLineHight));
+        for (int x = p.getX() + Xmin; x <= p.getX() + Xmax; x++) {
+            PanelPoint point=new PanelPoint(x, p.getY(), mLineHight);
+            if (!mBlackPoint.contains(point)&&!mRedPoint.contains(point)) {
+                plist.add(new PanelPoint(x, p.getY(), mLineHight));
+            }
         }
-        for (int y = p.getY()+1 + min; y < p.getY() + max; y++) {
-            plist.add(new PanelPoint(p.getX(), y, mLineHight));
+        for (int y = p.getY() + min; y <= p.getY() + max; y++) {
+            PanelPoint point=new PanelPoint(p.getX(), y, mLineHight);
+            if (!mBlackPoint.contains(point)&&!mRedPoint.contains(point)) {
+                plist.add(new PanelPoint(p.getX(), y, mLineHight));
+            }
         }
         PanelPoint p1=getMinPanel(p,mRedPoint,mBlackPoint);
         PanelPoint p2=getMinPanel(p1,mRedPoint,mBlackPoint);

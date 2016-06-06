@@ -92,6 +92,8 @@ public class ChessPanel extends View {
     private ChessPoint chessPoint;
     private ChessPoint chessPoint1;
     private String text;
+    private PanelPoint mJiangPoint;
+    private PanelPoint mShuaiPoint;
 
     public ChessPanel(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -282,6 +284,8 @@ public class ChessPanel extends View {
     }
 
     private void cshPoint() {
+        mJiangPoint=new PanelPoint(4,9,mLineHight);
+        mShuaiPoint=new PanelPoint(4,0,mLineHight);
         mRedPoint=new ArrayList<PanelPoint>();
         mBlackPoint=new ArrayList<PanelPoint>();
         for (int i = 0; i < 9; i++) {
@@ -348,7 +352,6 @@ public class ChessPanel extends View {
             } else {
                 Log.d(TAG, "onTouchEvent: 第二次点击");
 
-//                    if (vaildPoint.contains(p)) {
                 if (mIsRed == true) {
                     //加入新棋子
                     if (!mRedPoint.contains(p)) {
@@ -358,6 +361,12 @@ public class ChessPanel extends View {
 
                             mIsRed = false;
                             mDianjiguo = !mDianjiguo;
+
+                            if(bmp==mShuaiPiece){
+                                mShuaiPoint=p;
+                                Log.d(TAG, "onTouchEvent: 更新帅的位置");
+
+                            }
                             //                        吃子
                             if (mBlackPoint.contains(p)) {
                                 mBlackPoint.remove(p);
@@ -397,6 +406,10 @@ public class ChessPanel extends View {
                             mIsRed = !mIsRed;
 
                             mDianjiguo = !mDianjiguo;
+                            if(bmp==mJiangPiece){
+                                mJiangPoint=p;
+                                Log.d(TAG, "onTouchEvent: 更新将的位置");
+                            }
                             //                        吃子
                             if (mRedPoint.contains(p)) {
                                 mRedPoint.remove(p);
@@ -465,6 +478,7 @@ public class ChessPanel extends View {
     }
 
     private void getLuoZiPoint(PanelPoint p) {
+        Boolean isJSOnlyOne=isJSOnlyOne();
         if (mIsRed) {
             Log.d(TAG, "onTouchEvent: 红方选择棋子");
             if (mRedPoint.contains(p)) {
@@ -482,38 +496,59 @@ public class ChessPanel extends View {
                 if (bmp == mShuaiPiece) {
                     //                        设置图片闪烁
                     Log.d(TAG, "onTouchEvent: 点击了帅");
-                    vaildPoint = ShuaiRule.getVaildPoint(p, mLineHight, mJggPoint);
+                    vaildPoint = ShuaiRule.getVaildPoint(p,mShuaiPoint,mJiangPoint, mLineHight, mJggPoint,mBlackPoint,mRedPoint);
+
                     Log.d(TAG, "onTouchEvent: 取得帅的有效位置");
                 } else if (bmp == mShiPiece) {
                     //闪烁效果
                     Log.d(TAG, "onTouchEvent: 点击了红士");
                     vaildPoint = ShiRule.getVaildPoint(p, mLineHight, mJggPoint);
                     Log.d(TAG, "onTouchEvent: 取得士的有效位置");
+                    if (mSelectPiece.getX()==mJiangPoint.getX()&&mJiangPoint.getX()==mShuaiPoint.getX()&&isJSOnlyOne) {
+
+                            getRealVaildPoint(vaildPoint);
+
+                    }
                 } else if (bmp == mXiangPiece) {
                     //闪烁效果
                     Log.d(TAG, "onTouchEvent: 点击了红象");
                     vaildPoint = XiangRule.getVaildPoint(p, mLineHight, mHongPoint, mRedPoint, mBlackPoint);
                     Log.d(TAG, "onTouchEvent: 取得象的有效位置");
+                    if (mSelectPiece.getX()==mJiangPoint.getX()&&mJiangPoint.getX()==mShuaiPoint.getX()&&isJSOnlyOne) {
+                        getRealVaildPoint(vaildPoint);
+                    }
                 } else if (bmp == mMaPiece) {
                     //闪烁效果
                     Log.d(TAG, "onTouchEvent: 点击了红马");
                     vaildPoint = MaRule.getVaildPoint(p, mLineHight, mRedPoint, mBlackPoint);
                     Log.d(TAG, "onTouchEvent: 取得马的有效位置");
+                    if (mSelectPiece.getX()==mJiangPoint.getX()&&mJiangPoint.getX()==mShuaiPoint.getX()&&isJSOnlyOne) {
+                        getRealVaildPoint(vaildPoint);
+                    }
                 } else if (bmp == mChePiece) {
                     //闪烁效果
                     Log.d(TAG, "onTouchEvent: 点击了红车");
                     vaildPoint = CheRule.getVaildPoint(p, mLineHight, mRedPoint, mBlackPoint);
                     Log.d(TAG, "onTouchEvent: 取得车的有效位置");
+                    if (mSelectPiece.getX()==mJiangPoint.getX()&&mJiangPoint.getX()==mShuaiPoint.getX()&&isJSOnlyOne) {
+                        getRealVaildPoint(vaildPoint);
+                    }
                 } else if (bmp == mBingPiece) {
                     //闪烁效果
                     Log.d(TAG, "onTouchEvent: 点击了兵");
                     vaildPoint = BingRule.getVaildPoint(p, mLineHight, mHongPoint);
                     Log.d(TAG, "onTouchEvent: 取得兵的有效位置");
+                    if (mSelectPiece.getX()==mJiangPoint.getX()&&mJiangPoint.getX()==mShuaiPoint.getX()&&isJSOnlyOne) {
+                        getRealVaildPoint(vaildPoint);
+                    }
                 } else if (bmp == mPaoPiece) {
                     //闪烁效果
                     Log.d(TAG, "onTouchEvent: 点击了炮");
                     vaildPoint = PaoRule.getVaildPoint(p, mLineHight, mRedPoint, mBlackPoint);
                     Log.d(TAG, "onTouchEvent: 取得炮的有效位置");
+                    if (mSelectPiece.getX()==mJiangPoint.getX()&&(mJiangPoint.getX()==mShuaiPoint.getX())&&isJSOnlyOne) {
+                        getRealVaildPoint(vaildPoint);
+                    }
                 }
 
             }
@@ -539,8 +574,9 @@ public class ChessPanel extends View {
                     Log.d(TAG, "onTouchEvent: 点击了将");
 
                     //                        设置图片闪烁
-                    vaildPoint = JiangRule.getVaildPoint(p, mLineHight, mJggPoint);
+                    vaildPoint = JiangRule.getVaildPoint(p,mShuaiPoint,mJiangPoint, mLineHight, mJggPoint,mBlackPoint,mRedPoint);
                     Log.d(TAG, "onTouchEvent: 取得将的有效位置");
+                    Log.d(TAG, "getLuoZiPoint: "+(mJiangPoint.getX()==mShuaiPoint.getX())+(mSelectPiece.getX()==mJiangPoint.getX()));
                 } else {
                     if (bmp == mShiBPiece) {
                         Log.d(TAG, "onTouchEvent: 点击了黑士");
@@ -548,36 +584,86 @@ public class ChessPanel extends View {
                         //                        设置图片闪烁
                         vaildPoint = ShiBRule.getVaildPoint(p, mLineHight, mJggPoint);
                         Log.d(TAG, "onTouchEvent: 取得黑士的有效位置");
+                        if (mSelectPiece.getX()==mJiangPoint.getX()&&mJiangPoint.getX()==mShuaiPoint.getX()&&isJSOnlyOne) {
+                            getRealVaildPoint(vaildPoint);
+                        }
                     } else if (bmp == mXiangBPiece) {
                         //闪烁效果
                         Log.d(TAG, "onTouchEvent: 点击了黑象");
                         vaildPoint = XiangRule.getVaildPoint(p, mLineHight, mHeiPoint, mRedPoint, mBlackPoint);
                         Log.d(TAG, "onTouchEvent: 取得黑象的有效位置");
+                        if (mSelectPiece.getX()==mJiangPoint.getX()&&mJiangPoint.getX()==mShuaiPoint.getX()&&isJSOnlyOne) {
+                            getRealVaildPoint(vaildPoint);
+                        }
                     } else if (bmp == mMaBPiece) {
                         //闪烁效果
                         Log.d(TAG, "onTouchEvent: 点击了黑马");
                         vaildPoint = MaRule.getVaildPoint(p, mLineHight, mRedPoint, mBlackPoint);
                         Log.d(TAG, "onTouchEvent: 取得黑马的有效位置");
+                        if (mSelectPiece.getX()==mJiangPoint.getX()&&mJiangPoint.getX()==mShuaiPoint.getX()&&isJSOnlyOne) {
+                            getRealVaildPoint(vaildPoint);
+                        }
                     } else if (bmp == mCheBPiece) {
                         //闪烁效果
                         Log.d(TAG, "onTouchEvent: 点击了黑车");
                         vaildPoint = CheRule.getVaildPoint(p, mLineHight, mRedPoint, mBlackPoint);
                         Log.d(TAG, "onTouchEvent: 取得黑车的有效位置");
+                        if (mSelectPiece.getX()==mJiangPoint.getX()&&mJiangPoint.getX()==mShuaiPoint.getX()&&isJSOnlyOne) {
+                            getRealVaildPoint(vaildPoint);
+                        }
                     } else if (bmp == mZuPiece) {
                         //闪烁效果
                         Log.d(TAG, "onTouchEvent: 点击了卒");
-                        vaildPoint = ZuRule.getVaildPoint(p, mLineHight, mHongPoint);
+                        vaildPoint = ZuRule.getVaildPoint(p, mLineHight, mHeiPoint);
                         Log.d(TAG, "onTouchEvent: 取得卒的有效位置");
+                        if (mSelectPiece.getX()==mJiangPoint.getX()&&mJiangPoint.getX()==mShuaiPoint.getX()&&isJSOnlyOne) {
+                                getRealVaildPoint(vaildPoint);
+
+                        }
                     } else if (bmp == mPaoBPiece) {
                         //闪烁效果
                         Log.d(TAG, "onTouchEvent: 点击了黑炮");
                         vaildPoint = PaoRule.getVaildPoint(p, mLineHight, mRedPoint, mBlackPoint);
                         Log.d(TAG, "onTouchEvent: 取得黑炮的有效位置");
+                        if (mSelectPiece.getX()==mJiangPoint.getX()&&mJiangPoint.getX()==mShuaiPoint.getX()&&isJSOnlyOne) {
+                            getRealVaildPoint(vaildPoint);
+                        }
                     }
 
                 }
             }
         }
+
+    }
+
+    private boolean isJSOnlyOne() {
+        Log.d(TAG, "isJSOnlyOne: "+mJiangPoint.getX());
+        Log.d(TAG, "isJSOnlyOne: "+mShuaiPoint.getX());
+        ArrayList<PanelPoint> plist=new ArrayList<PanelPoint>();
+        for(PanelPoint point:mRedPoint){
+            if(point.getX()==mJiangPoint.getX()){
+                plist.add(point);
+            }
+        }
+        for(PanelPoint point:mBlackPoint){
+            if(point.getX()==mJiangPoint.getX()){
+                plist.add(point);
+            }
+        }
+        Log.d(TAG, "isJSOnlyOne: "+(plist.size()==3));
+        return plist.size()==3;
+    }
+
+    private void getRealVaildPoint(ArrayList<PanelPoint> vaildPoint) {
+        ArrayList<PanelPoint> plist=new ArrayList<PanelPoint>();
+            for(PanelPoint point:vaildPoint){
+                if(point.getX()==mJiangPoint.getX()){
+                    plist.add(point);
+                }
+            }
+        Log.d(TAG, "getRealVaildPoint: "+plist.toString());
+        this.vaildPoint=plist;
+
 
     }
 
