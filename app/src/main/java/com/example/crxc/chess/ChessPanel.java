@@ -31,8 +31,6 @@ import java.util.TimerTask;
  */
 public class ChessPanel extends View {
     private int mPanelWidth;
-    private int line = 10;
-    private int lie = 9;
     private float mLineHight;
     private Paint mPaint;
     private int mPanelHight;
@@ -1042,15 +1040,10 @@ public class ChessPanel extends View {
             canvas.drawLine(x, startY1, x, endY1, mPaint);
             canvas.drawLine(x, startY2, x, endY2, mPaint);
         }
-        drawText(canvas);
+
     }
 
-    private void drawText(Canvas canvas) {
-//        Point point=new Point((int)(7.5*mLineHight),(int)(4.8*mLineHight));
-        mPaint.setTextSize(40);
-        canvas.drawText("楚河", (int) 7.5 * mLineHight, (int) 5.8 * mLineHight, mPaint);
-        canvas.drawText("汉界", (int) 1.8 * mLineHight, (int) 5.8 * mLineHight, mPaint);
-    }
+
 
 
 }
