@@ -1,14 +1,16 @@
-package com.example.crxc.chess;
+package com.example.crxc.chess.presenter;
+
+import com.example.crxc.chess.bean.PanelPoint;
 
 import java.util.ArrayList;
 
 /**
  * Created by crxc on 2016/6/4.
  */
-public class ShuaiRule {
+public class JiangRule {
 
-    protected static ArrayList<PanelPoint>  getVaildPoint(PanelPoint p,PanelPoint ShuaiPoint,PanelPoint JiangPoint,float mLineHight,ArrayList<PanelPoint> mJggPoint,
-                                                          ArrayList<PanelPoint> mBlackPoint,ArrayList<PanelPoint> mRedPoint) {
+    protected static ArrayList<PanelPoint>  getVaildPoint(PanelPoint p, PanelPoint ShuaiPoint, PanelPoint JiangPoint, float mLineHight, ArrayList<PanelPoint> mJggPoint,
+                                                          ArrayList<PanelPoint> mBlackPoint, ArrayList<PanelPoint> mRedPoint) {
         ArrayList<PanelPoint> vaildPoint = new ArrayList<PanelPoint>();
         PanelPoint p1 = new PanelPoint(p.getX()-1,p.getY(),mLineHight);
         PanelPoint p2 = new PanelPoint(p.getX()+1,p.getY(),mLineHight);
@@ -19,12 +21,12 @@ public class ShuaiRule {
 
         PanelPoint[] plist = new PanelPoint[]{p1, p2, p3, p4};
         for (PanelPoint point: plist) {
-            if (point.getX()!=JiangPoint.getX()) {
+            if (point.getX()!=ShuaiPoint.getX()) {
                 if (mJggPoint.contains(point)) {
                     vaildPoint.add(point);
                 }
             }else {
-                int X=JiangPoint.getX();
+                int X=ShuaiPoint.getX();
                 for(PanelPoint panelPoint:mRedPoint){
                     if(panelPoint.getX()==X){
                         int min=ShuaiPoint.getY();

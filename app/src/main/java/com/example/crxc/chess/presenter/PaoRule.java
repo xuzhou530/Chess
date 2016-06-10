@@ -1,6 +1,8 @@
-package com.example.crxc.chess;
+package com.example.crxc.chess.presenter;
 
 import android.util.Log;
+
+import com.example.crxc.chess.bean.PanelPoint;
 
 import java.util.ArrayList;
 

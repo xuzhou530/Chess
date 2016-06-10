@@ -1,4 +1,4 @@
-package com.example.crxc.chess;
+package com.example.crxc.chess.bean;
 
 import android.graphics.Bitmap;
 import android.graphics.Point;
@@ -10,6 +10,8 @@ public class ChessPoint  {
 
     private final Point mPoint;
 
+    private final Bitmap mBitmap;
+
     public Bitmap getmBitmap() {
         return mBitmap;
     }
@@ -18,10 +20,8 @@ public class ChessPoint  {
         return mPoint;
     }
 
-    private final Bitmap mBitmap;
 
-
-    public ChessPoint(Point p, Bitmap b) {
+    public ChessPoint(PanelPoint p, Bitmap b) {
         mPoint=p;
         mBitmap=b;
     }

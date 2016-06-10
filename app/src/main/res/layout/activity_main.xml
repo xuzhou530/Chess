@@ -10,9 +10,9 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.crxc.chess.MainActivity">
+    tools:context=".view.MainActivity">
 
-    <com.example.crxc.chess.ChessPanel
+    <com.example.crxc.chess.view.ChessPanelView
         android:layout_gravity="center"
         android:id="@+id/chessPanel"
         android:layout_width="match_parent"

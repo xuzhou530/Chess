@@ -1,11 +1,13 @@
-package com.example.crxc.chess;
+package com.example.crxc.chess.presenter;
+
+import com.example.crxc.chess.bean.PanelPoint;
 
 import java.util.ArrayList;
 
 /**
  * Created by crxc on 2016/6/4.
  */
-public class ShiBRule {
+public class ShiRule {
     protected static ArrayList<PanelPoint> getVaildPoint(PanelPoint p, float mLineHight, ArrayList<PanelPoint> mJggPoint) {
         ArrayList<PanelPoint> vaildPoint = new ArrayList<PanelPoint>();
         PanelPoint p1 = new PanelPoint(p.getX()-1,p.getY()-1,mLineHight);

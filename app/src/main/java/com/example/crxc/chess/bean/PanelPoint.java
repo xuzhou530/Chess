@@ -1,4 +1,4 @@
-package com.example.crxc.chess;
+package com.example.crxc.chess.bean;
 
 import android.graphics.Point;
 
