@@ -31,4 +31,5 @@ public interface IChessPanelView {
 
     void cshPieceBmp();
 
+
 }

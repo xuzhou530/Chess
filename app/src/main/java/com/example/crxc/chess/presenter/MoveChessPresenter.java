@@ -27,7 +27,6 @@ public class MoveChessPresenter {
     private ArrayList<PanelPoint> mRedPoint;
     private ArrayList<PanelPoint> mBlackPoint;
     private boolean mIsRed;
-//    private PanelPoint mSelectPiece;
     private Timer timer;
     private Timer timer2;
     private ArrayList<ChessPoint> mRedArray;
@@ -46,12 +45,14 @@ public class MoveChessPresenter {
     private Bitmap mCheBPiece;
     private Bitmap mPaoBPiece;
     private Bitmap mZuPiece;
+    private int id=0;
 
 
     public MoveChessPresenter(ChessPanelView chessPanelView,ChessModel chessModel) {
         mChessPanelView=chessPanelView;
         mChessModel=chessModel;
     }
+
 
 
     public void MovePiece(PanelPoint p) {
@@ -70,6 +71,7 @@ public class MoveChessPresenter {
             Log.d(TAG, "onTouchEvent:第一次点击 ");
             getLuoZiPoint(p);
         } else {
+            id=id+1;
             Log.d(TAG, "onTouchEvent: 第二次点击");
             if (mIsRed == true) {
                 //加入新棋子
@@ -120,6 +122,7 @@ public class MoveChessPresenter {
                         }
                         mChessPanelView.invalidate();
                         Log.d(TAG, "onTouchEvent: 红方落子");
+                        mChessModel.SavePoint(p,id,chessPoint1);
                         getRedNextLuoZiPoint(p);
                         Log.d(TAG, "onTouchEvent: 判断是否将军");
                         if(mChessModel.getRedVaildPoint().contains(mChessModel.getJiangPoint())){
@@ -166,7 +169,7 @@ public class MoveChessPresenter {
                             isChiZi=true;
                         }
 
-                        Log.d(TAG, "onTouchEvent:黑方落子 ");
+
                         mBlackPoint.add(p);
                         mBlackPoint.remove(mChessModel.getSelectPoint());
                         mChessModel.setBlackPoint(mBlackPoint);
@@ -181,6 +184,7 @@ public class MoveChessPresenter {
                         }
                         mChessPanelView.invalidate();
                         Log.d(TAG, "onTouchEvent: 黑方落子");
+                        mChessModel.SavePoint(p, id, chessPoint1);
 
                         getBlackNextLuoZiPoint(p);
                         Log.d(TAG, "onTouchEvent: 判断是否将军");
@@ -667,6 +671,24 @@ public class MoveChessPresenter {
         };
         timer.schedule(task,500,1000);
         timer.schedule(task2,1000,1000);
+    }
+    public void huiqi() {
+        ArrayList<Object> list =mChessModel.loadLastPoint(id);
+        try {
+            ChessPoint chessPoint=(ChessPoint) list.get(0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        PanelPoint point1=(PanelPoint) list.get(0);
+        PanelPoint point2=(PanelPoint) list.get(1);
+        MovePiece(point1);
+        MovePiece(point2);
+    }
+
+    public void qiuhe() {
+    }
+
+    public void surrender() {
     }
 }
 

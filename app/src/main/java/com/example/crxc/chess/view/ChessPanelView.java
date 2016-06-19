@@ -1,5 +1,6 @@
 package com.example.crxc.chess.view;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -16,6 +17,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.crxc.chess.R;
@@ -26,34 +28,38 @@ import com.example.crxc.chess.model.ChessModel;
 import com.example.crxc.chess.presenter.CshPresenter;
 import com.example.crxc.chess.presenter.MoveChessPresenter;
 
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
 /**
  * Created by crxc on 2016/6/9.
  */
-public class ChessPanelView extends View implements IChessPanelView {
+public class ChessPanelView extends View implements IChessPanelView{
     private Paint mPaint;
-    private CshPresenter mPresent=null;
-    private MoveChessPresenter mMovePresent=null;
+    private CshPresenter mPresent = null;
+    private MoveChessPresenter mMovePresent = null;
     private String text;
-    ChessModel mChessModel=new ChessModel();
+    ChessModel mChessModel = new ChessModel(getContext());
     private static final String TAG = "ChessPanelView";
+
 
     public ChessPanelView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        mPresent=new CshPresenter(this,mChessModel);
-        mMovePresent=new MoveChessPresenter(this,mChessModel);
+        mPresent = new CshPresenter(this, mChessModel);
+        mMovePresent = new MoveChessPresenter(this, mChessModel);
         init();
     }
 
     private void init() {
-        mPaint=new Paint();
+        mPaint = new Paint();
         mPaint.setColor(Color.BLACK);
         mPaint.setStrokeWidth(5f);
         cshPieceBmp();
+//        LayoutInflater inflater=LayoutInflater.from(getContext().getApplicationContext());
+//        View layout=inflater.inflate(R.layout.activity_main,null);
+
     }
+
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);
@@ -61,14 +67,24 @@ public class ChessPanelView extends View implements IChessPanelView {
         int width = Math.min(widthSize, heightSize);
         setMeasuredDimension(width, width / 9 * 10);
     }
+
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        csh(w,h);
+        csh(w, h);
+//        Button bt1 = (Button) getRootView().findViewById(R.id.player1huiqi);
+//        bt1.setOnClickListener(this);
+//        Button bt4 = (Button) getRootView().findViewById(R.id.player2huiqi);
+//        bt4.setOnClickListener(this);
+//        Button bt5 = (Button)  getRootView().findViewById(R.id.player2qiuhe);
+//        bt5.setOnClickListener(this);
+//        Button bt6 = (Button)  getRootView().findViewById(R.id.player2surrender);
+//        bt6.setOnClickListener(this);
     }
 
     public void csh(int w, int h) {
-        mPresent.csh( w, h);
+        mPresent.csh(w, h);
     }
+
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         drawBoard(canvas);
@@ -80,9 +96,9 @@ public class ChessPanelView extends View implements IChessPanelView {
         int action = event.getAction();
         if (action == MotionEvent.ACTION_DOWN) {
             Log.d(TAG, "onTouchEvent:down ");
-            int x=(int)event.getX();
-            int y=(int)event.getY();
-            PanelPoint p=getVaildPoint(x,y);
+            int x = (int) event.getX();
+            int y = (int) event.getY();
+            PanelPoint p = getVaildPoint(x, y);
             mMovePresent.MovePiece(p);
             return true;
         }
@@ -91,8 +107,8 @@ public class ChessPanelView extends View implements IChessPanelView {
     }
 
     private void drawPieces(Canvas canvas) {
-       ArrayList<ChessPoint> mRedArray= getRedArray();
-       ArrayList<ChessPoint> mBlackArray= getBlackArray();
+        ArrayList<ChessPoint> mRedArray = getRedArray();
+        ArrayList<ChessPoint> mBlackArray = getBlackArray();
         for (ChessPoint chessPoint : mRedArray) {
             Bitmap bitmap = chessPoint.getmBitmap();
             Point point = chessPoint.getmPoint();
@@ -104,10 +120,11 @@ public class ChessPanelView extends View implements IChessPanelView {
             canvas.drawBitmap(bitmap, point.x, point.y, null);
         }
     }
+
     private void drawBoard(Canvas canvas) {
-        float mLineHight=mPresent.getLineHight();
-        int mPanelHight=mPresent.getPanelHight();
-        int mPanelWidth=mPresent.getPanelWidth();
+        float mLineHight = mPresent.getLineHight();
+        int mPanelHight = mPresent.getPanelHight();
+        int mPanelWidth = mPresent.getPanelWidth();
         ZhPoint p1 = new ZhPoint(3, 0, mLineHight);
         ZhPoint p2 = new ZhPoint(3, 2, mLineHight);
         ZhPoint p3 = new ZhPoint(5, 0, mLineHight);
@@ -129,7 +146,6 @@ public class ChessPanelView extends View implements IChessPanelView {
         }
         for (int i = 0; i < 9; i++) {
             int startY1 = (int) mLineHight / 2;
-
             int endY1 = (int) (startY1 + (mPanelHight - mLineHight) * 4 / 9);
             int startY2 = (int) (startY1 + (mPanelHight - mLineHight) * 5 / 9);
             int endY2 = (int) (mPanelHight - startY1);
@@ -167,8 +183,8 @@ public class ChessPanelView extends View implements IChessPanelView {
     }
 
     @Override
-    public PanelPoint getVaildPoint(int x,int y) {
-        float mLineHight=mPresent.getLineHight();
+    public PanelPoint getVaildPoint(int x, int y) {
+        float mLineHight = mPresent.getLineHight();
         PanelPoint p = new PanelPoint((int) (x / mLineHight), (int) ((10 * mLineHight - y) / mLineHight), mLineHight);
         return p;
     }
@@ -185,14 +201,16 @@ public class ChessPanelView extends View implements IChessPanelView {
         });
     }
 
+
+
     @Override
     public void setText(int redWin) {
-        text= getResources().getString(redWin);
+        text = getResources().getString(redWin);
     }
 
     @Override
     public void ShowDialog() {
-        AlertDialog.Builder builder=new AlertDialog.Builder(getContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(text);
         builder.setMessage(getResources().getString(R.string.OneMoreGame));
         builder.setPositiveButton(getResources().getString(R.string.OneMoreGameYes), new DialogInterface.OnClickListener() {
@@ -211,7 +229,7 @@ public class ChessPanelView extends View implements IChessPanelView {
 
     @Override
     public void PlayChiZiMusic() {
-        MediaPlayer player=new MediaPlayer().create(getContext(),R.raw.chize);
+        MediaPlayer player = new MediaPlayer().create(getContext(), R.raw.chize);
         player.start();
         player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
@@ -224,11 +242,11 @@ public class ChessPanelView extends View implements IChessPanelView {
 
     @Override
     public void ShowJiangJunToast() {
-        Toast toast=new Toast(getContext());
-        LayoutInflater inflater=LayoutInflater.from(getContext());
-        View toast_view=inflater.inflate(R.layout.layout_jiangjun_toast,null);
+        Toast toast = new Toast(getContext());
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        View toast_view = inflater.inflate(R.layout.layout_jiangjun_toast, null);
         toast.setView(toast_view);
-        toast.setGravity(Gravity.CENTER,0,0);
+        toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
     }
 
@@ -249,4 +267,26 @@ public class ChessPanelView extends View implements IChessPanelView {
         mPresent.setCheBPiece(BitmapFactory.decodeResource(getResources(), R.mipmap.cheb));
         mPresent.setPaoBPiece(BitmapFactory.decodeResource(getResources(), R.mipmap.paob));
     }
+//    @Override
+//    public void onClick(View v) {
+//        switch (v.getId()) {
+//            case R.id.player1huiqi:
+//                mMovePresent.huiqi();
+//                break;
+//            case R.id.player2huiqi:
+//                mMovePresent.huiqi();
+//                break;
+//
+//            case R.id.player2qiuhe:
+//                mMovePresent.qiuhe();
+//                break;
+//
+//            case R.id.player2surrender:
+//                mMovePresent.surrender();
+//                break;
+//        }
+//    }
+
+
 }
+

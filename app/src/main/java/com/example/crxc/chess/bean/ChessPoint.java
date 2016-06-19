@@ -3,12 +3,14 @@ package com.example.crxc.chess.bean;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 
+import java.io.Serializable;
+
 /**
  * Created by crxc on 2016/6/1.
  */
-public class ChessPoint  {
+public class ChessPoint implements Serializable {
 
-    private final Point mPoint;
+    private final PanelPoint mPoint;
 
     private final Bitmap mBitmap;
 
@@ -16,7 +18,7 @@ public class ChessPoint  {
         return mBitmap;
     }
 
-    public Point getmPoint() {
+    public PanelPoint getmPoint() {
         return mPoint;
     }
 

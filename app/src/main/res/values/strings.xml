@@ -5,4 +5,8 @@
     <string name="RedWin">红方胜</string>
     <string name="QuitGame">退出游戏</string>
     <string name="BlackWin">黑方胜</string>
+    <string name="surrender">投降</string>
+    <string name="qiuhe">求和</string>
+    <string name="huiqi">悔棋</string>
+    <string name="loadfupan">读取复盘</string>
 </resources>

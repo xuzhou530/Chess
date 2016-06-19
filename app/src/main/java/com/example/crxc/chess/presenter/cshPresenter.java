@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.example.crxc.chess.bean.ChessPoint;
+import com.example.crxc.chess.bean.PanelPoint;
 import com.example.crxc.chess.model.ChessModel;
 import com.example.crxc.chess.model.IChessModel;
 import com.example.crxc.chess.view.ChessPanelView;
@@ -129,6 +130,7 @@ public class CshPresenter {
         mChessModel.setPaoBPiece(bitmap);
 
     }
+
 
 
 }

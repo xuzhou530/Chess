@@ -22,5 +22,38 @@
         android:layout_height="match_parent"
         android:src="@drawable/chuhe"/>
 
+    <!--<Button-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="@string/surrender"-->
+        <!--android:id="@+id/player2surrender"-->
+        <!--android:layout_gravity="right|bottom"-->
+        <!--/>-->
+
+
+    <!--<com.example.crxc.chess.view.Player2Button-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="@string/huiqi"-->
+        <!--android:id="@+id/player1huiqi"-->
+        <!--android:layout_gravity="center_horizontal|top"-->
+        <!--/>-->
+
+    <!--<Button-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="@string/huiqi"-->
+        <!--android:id="@+id/player2huiqi"-->
+        <!--android:layout_gravity="center_horizontal|bottom"-->
+        <!--/>-->
+
+    <!--<Button-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="@string/qiuhe"-->
+        <!--android:id="@+id/player2qiuhe"-->
+        <!--android:layout_gravity="left|bottom"-->
+        <!--/>-->
+
 
 </FrameLayout>

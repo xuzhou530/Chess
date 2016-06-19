@@ -150,4 +150,10 @@ public interface IChessModel {
     void setZuPiece(Bitmap bitmap);
 
     void setBingPiece(Bitmap bitmap);
+
+    void SavePoint(PanelPoint p, int id, ChessPoint chessPoint1);
+
+    ArrayList<Object> loadLastPoint(int id);
+
+
 }

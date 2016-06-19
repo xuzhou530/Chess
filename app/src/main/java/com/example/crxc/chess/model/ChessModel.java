@@ -1,19 +1,30 @@
 package com.example.crxc.chess.model;
 
 
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.example.crxc.chess.bean.PanelPoint;
 import com.example.crxc.chess.bean.ChessPoint;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by crxc on 2016/6/9.
  */
 public class ChessModel implements IChessModel {
     private static final String TAG = "ChessModel";
+    private final Context mContext;
     ChessBitmap mChessBitmap = new ChessBitmap();
     Specification mSpecification = new Specification();
     RedPoint mRedPoint = new RedPoint();
@@ -31,6 +42,12 @@ public class ChessModel implements IChessModel {
     SelectPanelInfo mSelectPanelInfo = new SelectPanelInfo();
     RedVaildPoint mRedVaildPoint = new RedVaildPoint();
     BlackVaildPoint mBlackVaildPoint = new BlackVaildPoint();
+    private MySqliteHelper myHelper;
+
+    public ChessModel(Context context) {
+        mContext=context;
+        myHelper=new MySqliteHelper(mContext,new Date(System.currentTimeMillis()).toString()+".db",null,1);
+    }
 
 
     @Override
@@ -538,6 +555,81 @@ public class ChessModel implements IChessModel {
     @Override
     public void setBingPiece(Bitmap bitmap) {
         mChessBitmap.setmBingPiece(bitmap);
+    }
+
+    @Override
+    public void SavePoint(PanelPoint p, int id, ChessPoint chessPoint1) {
+        PanelPoint p2=getSelectPoint();
+        SQLiteDatabase db=myHelper.getWritableDatabase();
+        ContentValues values=new ContentValues();
+        values.put("_id",id);
+        values.put("X1",p2.getX());
+        values.put("Y1",p2.getY());
+        values.put("X2",p.getX());
+        values.put("Y2",p.getY());
+        if (chessPoint1!=null) {
+            ByteArrayOutputStream arrayOutputStream=new ByteArrayOutputStream();
+            try {
+                ObjectOutputStream objectOutputStream=new ObjectOutputStream(arrayOutputStream);
+                objectOutputStream.writeObject(chessPoint1);
+                objectOutputStream.flush();
+                byte data[]=arrayOutputStream.toByteArray();
+                objectOutputStream.close();
+                arrayOutputStream.close();
+                values.put("ChessPoint",data);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        db.insert("Chess",null,values);
+        Log.d(TAG, "SavePoint: 插入数据");
+        db.close();
+    }
+
+    @Override
+    public ArrayList<Object> loadLastPoint(int id) {
+        PanelPoint panelPoint1;
+        PanelPoint panelPoint2;
+        ArrayList<Object> list=new ArrayList<Object>();
+        SQLiteDatabase db=myHelper.getReadableDatabase();
+        Cursor cursor=db.query("Chess", null,"_id="+id,null,null,null,"_id");
+        cursor.moveToFirst();
+        if (cursor!=null&&cursor.moveToFirst()) {
+            int X1Column=cursor.getColumnIndex("X1");
+            int Y1Column=cursor.getColumnIndex("Y1");
+            int X2Column=cursor.getColumnIndex("X2");
+            int Y2Column=cursor.getColumnIndex("Y2");
+            int X1=cursor.getInt(X1Column);
+            int Y1=cursor.getInt(Y1Column);
+            int X2=cursor.getInt(X2Column);
+            int Y2=cursor.getInt(Y2Column);
+            String text=cursor.getString(cursor.getColumnIndex("ChessPoint"));
+            if (text!=null) {
+                byte data[] =cursor.getBlob(cursor.getColumnIndex("ChessPoint"));
+                ByteArrayInputStream arrayInputStream=new ByteArrayInputStream(data);
+                try {
+                    ObjectInputStream objectInputStream=new ObjectInputStream(arrayInputStream);
+                    try {
+                        ChessPoint chessPoint=(ChessPoint)objectInputStream.readObject();
+                        list.add(chessPoint);
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    objectInputStream.close();
+                    arrayInputStream.close();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            panelPoint1=new PanelPoint(X1,Y1,getLineHight());
+            panelPoint2=new PanelPoint(X2,Y2,getLineHight());
+            list.add(panelPoint1);
+            list.add(panelPoint2);
+        }
+
+        return  list;
     }
 
 
